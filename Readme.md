@@ -43,12 +43,18 @@ project/
 ├── main.py                      # Main pipeline script
 └── requirements.txt             # Python dependencies
 ```
+##  Screenshots
+**Front Page**  
+![Front Page](Screenshot/front_page.png)
+
+**results**  
+![results Page](Screenshot/results.png)
 
 ## Installation
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Theepankumargandhi/Information-Retrieval-Final_project
 cd project
 ```
 
@@ -137,7 +143,7 @@ Search for documents
 {
   "query": "information retrieval",
   "top_k": 3,
-  "method": "tfidf"  // or "word2vec"
+  "method": "tfidf"  
 }
 ```
 
@@ -207,13 +213,5 @@ gensim==4.3.2
 - Neural ranking models
 - Larger document collections
 - Advanced query validation
-- Relevance feedback
 
-## Author
 
-Theepan Kumar Gandhi
-Information Retrieval Course Project
-
-## License
-
-This project is for educational purposes.
