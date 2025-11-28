@@ -45,16 +45,16 @@ project/
 ```
 ##  Screenshots
 **Front Page**  
-![Front Page](Screenshots/front_page.png)
+![Front Page](Screenshot/front_page.png)
 
 **results**  
-![results Page](Screenshots/results.png)
+![results Page](Screenshot/results.png)
 
 ## Installation
 
 1. **Clone the repository**
 ```bash
-git clone <https://github.com/Theepankumargandhi/Information-Retrieval-Final_project>
+git clone https://github.com/Theepankumargandhi/Information-Retrieval-Final_project
 cd project
 ```
 
@@ -213,13 +213,5 @@ gensim==4.3.2
 - Neural ranking models
 - Larger document collections
 - Advanced query validation
-- Relevance feedback
 
-## Author
 
-Theepan Kumar Gandhi
-Information Retrieval Course Project
-
-## License
-
-This project is for educational purposes.
