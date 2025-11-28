@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Retrieval System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .search-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .method-selector {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .method-selector label {
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .result-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+            background-color: #f9f9f9;
+        }
+        .method-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #2196F3;
+            color: white;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Information Retrieval Project</h1>
+    
+    <div class="search-box">
+        <input type="text" id="queryInput" placeholder="Enter your search query...">
+        
+        <div class="method-selector">
+            <strong>Search Method:</strong><br>
+            <label>
+                <input type="radio" name="method" value="tfidf" checked> TF-IDF (Keyword Matching)
+            </label>
+            <label>
+                <input type="radio" name="method" value="word2vec"> Word2Vec (Semantic Search)
+            </label>
+        </div>
+        
+        <button onclick="search()">Search</button>
+        <div id="error" class="error"></div>
+    </div>
+    
+    <div id="results" class="results" style="display: none;"></div>
+
+    <script>
+        function search() {
+            const query = document.getElementById('queryInput').value;
+            const method = document.querySelector('input[name="method"]:checked').value;
+            const errorDiv = document.getElementById('error');
+            const resultsDiv = document.getElementById('results');
+            
+            errorDiv.textContent = '';
+            
+            if (!query.trim()) {
+                errorDiv.textContent = 'Please enter a search query';
+                return;
+            }
+            
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: query,
+                    top_k: 3,
+                    method: method
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    errorDiv.textContent = data.error;
+                    resultsDiv.style.display = 'none';
+                } else {
+                    displayResults(data);
+                }
+            })
+            .catch(error => {
+                errorDiv.textContent = 'Error: ' + error.message;
+                resultsDiv.style.display = 'none';
+            });
+        }
+        
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            
+            const methodName = data.method === 'word2vec' ? 'Word2Vec' : 'TF-IDF';
+            
+            let html = '<h3>Search Results for: "' + data.query + '"';
+            html += '<span class="method-badge">' + methodName + '</span></h3>';
+            
+            data.results.forEach(result => {
+                html += '<div class="result-item">';
+                html += '<strong>Rank ' + result.rank + '</strong><br>';
+                html += 'Document ID: ' + result.document_id + '<br>';
+                html += 'Score: ' + result.score.toFixed(4);
+                html += '</div>';
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        document.getElementById('queryInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search();
+            }
+        });
+    </script>
+</body>
+</html>
